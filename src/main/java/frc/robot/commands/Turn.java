@@ -10,47 +10,44 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 
-public class MoveStraight extends Command {
-  private double distance;
-  private double kP = 0.05;
+public class Turn extends Command {
   private double speed;
-  public MoveStraight(double distance, double speed) {
+  private double angle;
+  private double kP = 0.8;
+  public Turn(double speed, double angle) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.distance = distance;
     this.speed = speed;
+    this.angle = angle;
     requires(Robot.drive);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    Robot.leftETalonSRX1.getEncoder().reset();
-    Robot.rightETalonSRX1.getEncoder().reset();
+    Robot.gyro.reset();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (Robot.gyro.getAngle() > 0){
-      Robot.drive.set(speed - kP, speed + kP);
-    } else if (Robot.gyro.getAngle() < 0){
-      Robot.drive.set(speed + kP, speed - kP);
+    if (angle > 0){
+      Robot.drive.set(speed, -speed);
     } else {
-      Robot.drive.set(speed);
+      Robot.drive.set(-speed, speed);
     }
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.leftETalonSRX1.getEncoder().getDistance() > distance;
+    return Math.abs(Robot.gyro.getAngle()) > Math.abs(kP * angle);
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.drive.stop();
+    Robot.drive.set(0);
   }
 
   // Called when another command which requires one or more of the same

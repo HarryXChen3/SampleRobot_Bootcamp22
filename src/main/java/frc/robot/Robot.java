@@ -57,7 +57,6 @@ public class Robot extends TimedRobot {
     drive = new TankDrive(leftETalonSRX1, rightETalonSRX1, leftTalonSRX2, rightTalonSRX2);
     rightETalonSRX1.setEncoder(new QuadEncoder(rightETalonSRX1, INCHES_PER_PULSE, true));
     leftETalonSRX1.setEncoder(new QuadEncoder(leftETalonSRX1, INCHES_PER_PULSE, true));
-    gyro = new Gyro
 
   }
 
